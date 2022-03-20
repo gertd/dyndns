@@ -24,10 +24,6 @@ build:
 	@echo "$(WARN_COLOR)==> build @GOOS=$(GOOS) GOARCH=$(GOARCH) $(NO_COLOR)"
 	@goreleaser build --single-target --snapshot --rm-dist
 
-install:
-	@echo "$(WARN_COLOR)==> install ./$(notdir $(CURDIR)) $(NO_COLOR)"
-	@GOOS=$(GOOS) GOARCH=$(GOARCH) go install .
-
 clean: 
 	@echo "$(WARN_COLOR)==> clean $(BIN_DIR) $(NO_COLOR)"
 	@rm -rf ./dist
@@ -42,3 +38,4 @@ test:
 
 release: 	
 	@echo "$(WARN_COLOR)==> release $(NO_COLOR)"
+	@goreleaser release --rm-dist
