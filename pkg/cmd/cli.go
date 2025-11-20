@@ -21,5 +21,6 @@ func (cmd *VersionCmd) Run(c *cc.CommonCtx) error {
 		x.AppName,
 		version.GetInfo().String(),
 	)
+
 	return nil
 }

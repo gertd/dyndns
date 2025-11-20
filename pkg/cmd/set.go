@@ -9,6 +9,7 @@ import (
 	"github.com/gertd/dyndns/pkg/namecheap"
 )
 
+//nolint:lll
 type SetCmd struct {
 	Passwd string `name:"passwd" required:"" env:"DYNDNS_PASSWD" help:"namecheap.com Dynamic DNS Password"`
 	Host   string `name:"host" required:"" env:"DYNDNS_HOST" default:"@" help:"host name"`
@@ -17,20 +18,23 @@ type SetCmd struct {
 	Info   bool   `name:"info" optional:"" help:"display settings, do not execute"`
 }
 
-func (cmd SetCmd) String() string {
+func (cmd *SetCmd) String() string {
 	s := fmt.Sprintf("%s = %s\n", "passwd ", mask(cmd.Passwd))
 	s += fmt.Sprintf("%s = %s\n", "host   ", cmd.Host)
 	s += fmt.Sprintf("%s = %s\n", "domain ", cmd.Domain)
 	s += fmt.Sprintf("%s = %s\n", "ip-addr", cmd.IPAddr)
+
 	return s
 }
 
 func mask(s string) string {
 	const maxExposure = 3
+
 	l := len(s)
 	if l <= (maxExposure*2)+1 {
 		return strings.Repeat("*", l)
 	}
+
 	return s[0:maxExposure] + strings.Repeat("*", l-(maxExposure*2)) + s[l-maxExposure:l]
 }
 
@@ -40,11 +44,13 @@ func (cmd *SetCmd) Run(c *cc.CommonCtx) error {
 		fmt.Fprintf(c.OutWriter, "%s = %s\n", "host   ", cmd.Host)
 		fmt.Fprintf(c.OutWriter, "%s = %s\n", "domain ", cmd.Domain)
 		fmt.Fprintf(c.OutWriter, "%s = %s\n", "ip-addr", cmd.IPAddr)
+
 		if cmd.IPAddr == "" {
 			if curIP, err := ipify.GetIPAddress(c); err == nil {
 				fmt.Fprintf(c.OutWriter, "%s = %s\n", "current", curIP)
 			}
 		}
+
 		return nil
 	}
 

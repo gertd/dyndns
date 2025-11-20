@@ -1,12 +1,13 @@
-//nolint:dupl
-package namecheap
+package namecheap_test
 
 import (
 	"encoding/xml"
 	"os"
 	"testing"
 
+	"github.com/gertd/dyndns/pkg/namecheap"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMain(m *testing.M) {
@@ -14,42 +15,41 @@ func TestMain(m *testing.M) {
 }
 
 func TestSuccessResponse(t *testing.T) {
-	var i interfaceResponse
+	var i namecheap.InterfaceResponse
 
 	buf := []byte(success)
 	err := xml.Unmarshal(buf, &i)
 
-	assert.Equal(t, nil, err)
+	require.NoError(t, err)
 	assert.Equal(t, "SETDNSHOST", i.Command)
 	assert.Equal(t, "eng", i.Language)
-	assert.Equal(t, true, i.Done)
+	assert.True(t, i.Done)
 	assert.Equal(t, 0, i.ErrCount)
-	assert.Equal(t, 0, len(i.Errors))
+	assert.Empty(t, i.Errors)
 	assert.Equal(t, 0, i.ResponseCount)
-	assert.Equal(t, 0, len(i.Responses))
+	assert.Empty(t, i.Responses)
 	assert.Equal(t, "52.32.92.192", i.IP)
 
 	t.Logf("%v\n", i)
 }
 
 func TestFailureResponse(t *testing.T) {
-	var i interfaceResponse
+	var i namecheap.InterfaceResponse
 
 	buf := []byte(failure)
 	err := xml.Unmarshal(buf, &i)
 
-	assert.Equal(t, nil, err)
+	require.NoError(t, err)
 	assert.Equal(t, "SETDNSHOST", i.Command)
 	assert.Equal(t, "eng", i.Language)
-	assert.Equal(t, true, i.Done)
+	assert.True(t, i.Done)
 	assert.Equal(t, 1, i.ErrCount)
-	assert.Equal(t, 1, len(i.Errors))
+	assert.Len(t, i.Errors, 1)
 	assert.Equal(t, 1, i.ResponseCount)
-	assert.Equal(t, 1, len(i.Responses))
-	assert.Equal(t, "", i.IP)
+	assert.Len(t, i.Responses, 1)
+	assert.Empty(t, i.IP)
 
 	t.Logf("%v\n", i)
-
 }
 
 var success = `

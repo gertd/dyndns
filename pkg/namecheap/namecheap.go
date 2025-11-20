@@ -19,7 +19,7 @@ type DynamicDNSConfigurator struct {
 	IPAddr string
 }
 
-type interfaceResponse struct {
+type InterfaceResponse struct {
 	Command       string     `xml:"Command"`
 	Language      string     `xml:"Language"`
 	IP            string     `xml:"IP"`
@@ -40,7 +40,7 @@ type response struct {
 }
 
 const (
-	dynamicdnsURL string = "https://dynamicdns.park-your-domain.com/update?host=%s&domain=%s&password=%s&ip=%s"
+	dynamicDnsURL string = "https://dynamicdns.park-your-domain.com/update?host=%s&domain=%s&password=%s&ip=%s"
 )
 
 func NewDynamicDNSConfigurator(passwd, host, domain, ipAddr string) *DynamicDNSConfigurator {
@@ -53,7 +53,7 @@ func NewDynamicDNSConfigurator(passwd, host, domain, ipAddr string) *DynamicDNSC
 }
 
 func (ddc *DynamicDNSConfigurator) Set(c *cc.CommonCtx) error {
-	url := fmt.Sprintf(dynamicdnsURL,
+	url := fmt.Sprintf(dynamicDnsURL,
 		ddc.Host,
 		ddc.Domain,
 		ddc.Passwd,
@@ -81,8 +81,10 @@ func (ddc *DynamicDNSConfigurator) Set(c *cc.CommonCtx) error {
 		return err
 	}
 
-	var ir interfaceResponse
+	var ir InterfaceResponse
+
 	dec := xml.NewDecoder(r)
+
 	dec.CharsetReader = identReader
 	if err := dec.Decode(&ir); err != nil {
 		return err

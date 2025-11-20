@@ -23,5 +23,6 @@ func (cmd *GetCmd) Run(c *cc.CommonCtx) error {
 	}
 
 	fmt.Fprintf(c.OutWriter, "current IP address = [%s]\n", ipAddr)
+
 	return nil
 }

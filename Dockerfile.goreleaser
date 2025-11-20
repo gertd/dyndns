@@ -1,0 +1,10 @@
+FROM alpine
+
+RUN apk add --no-cache bash tzdata
+
+WORKDIR /app
+
+COPY dyndns /app/
+
+ENTRYPOINT ["./dyndns"]
+

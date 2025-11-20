@@ -11,8 +11,10 @@ import (
 	_ "github.com/joho/godotenv/autoload"
 )
 
+const commandTimeOut = time.Second * 5
+
 func main() {
-	ct1, cancel := context.WithTimeout(context.Background(), time.Duration(5)*time.Second)
+	ct1, cancel := context.WithTimeout(context.Background(), commandTimeOut)
 	defer cancel()
 
 	c := cc.New(ct1)
